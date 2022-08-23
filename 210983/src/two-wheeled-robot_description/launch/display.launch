@@ -1,0 +1,71 @@
+<launch>
+  <arg name="model" default="$(find two-wheeled-robot_description)/urdf/two-wheeled-robot.xacro"/>
+  <arg name="gui" default="true"/>
+  <arg name="rvizconfig" default="$(find two-wheeled-robot_description)/launch/urdf.rviz"/>
+  <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>
+  <param name="use_gui" value="$(arg gui)"/>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"/>
+  <!-- <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/> -->
+  <node name="rviz" pkg="rviz" args="-d $(arg rvizconfig)" type="rviz" required="true"/>
+
+  <!-- gmapping node  -->
+
+  <!-- Send fake joint values-->
+  <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui">
+  </node>
+
+  <!-- Send robot states to tf -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
+
+
+    <arg name="scan_topic" default="twr/laser/scan" /> 
+
+<!-- Defining parameters for slam_gmapping node --> 
+
+  <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen"> 
+
+    <param name="base_frame" value="base_link"/> 
+
+    <!-- subscribe to odometry node-->
+    <param name="odom_frame" value="odom"/> 
+
+    <!-- get laser scan -->
+    <remap from="scan" to="$(arg scan_topic)"/> 
+
+
+    <param name="map_update_interval" value="5.0"/> 
+    <param name="maxUrange" value="6.0"/> 
+    <param name="maxRange" value="8.0"/> 
+    <param name="sigma" value="0.05"/> 
+    <param name="kernelSize" value="1"/> 
+    <param name="lstep" value="0.05"/> 
+    <param name="astep" value="0.05"/> 
+    <param name="iterations" value="5"/> 
+    <param name="lsigma" value="0.075"/> 
+    <param name="ogain" value="3.0"/> 
+    <param name="lskip" value="0"/> 
+    <param name="minimumScore" value="100"/> 
+    <param name="srr" value="0.01"/> 
+    <param name="srt" value="0.02"/> 
+    <param name="str" value="0.01"/> 
+    <param name="stt" value="0.02"/> 
+    <param name="linearUpdate" value="0.5"/> 
+    <param name="angularUpdate" value="0.436"/> 
+    <param name="temporalUpdate" value="-1.0"/> 
+    <param name="resampleThreshold" value="0.5"/> 
+    <param name="particles" value="80"/> 
+
+    <param name="xmin" value="-1.0"/> 
+    <param name="ymin" value="-1.0"/> 
+    <param name="xmax" value="1.0"/> 
+    <param name="ymax" value="1.0"/> 
+
+    <param name="delta" value="0.05"/> 
+    <param name="llsamplerange" value="0.01"/> 
+    <param name="llsamplestep" value="0.01"/> 
+    <param name="lasamplerange" value="0.005"/> 
+    <param name="lasamplestep" value="0.005"/> 
+
+  </node>
+
+</launch>
