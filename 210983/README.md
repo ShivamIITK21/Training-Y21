@@ -10,4 +10,4 @@
  1). Used setup from the previous gazebo task.  
  2). Added code for sensors in the xacro and gazebo files for the robot, added views in rviz for the same.  
  3). Created a gmapping node in the launch file of the robot which subscribes to **twr/laser/scan**.  
- 4). Added a map view in rviz and saved the map using **rosrun map_server map_saver -f mymap**.  
+ 4). Added a map view in rviz and saved the map using **rosrun map_server map_saver -f mymap**.   
